@@ -9,6 +9,8 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDate;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @NoArgsConstructor
@@ -33,10 +35,12 @@ public class Task {
     private LocalDate dueDate;
 
     @OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Subtask> subtasks;
 
     @ManyToOne
     @JoinColumn(name = "user_id") // Specify the name of the foreign key column
+    @JsonBackReference
     private User assignedUser;
 
     // Constructors, getters, setters, etc.

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.LocalDate;
 
@@ -20,9 +21,9 @@ public class Subtask {
     private String subtaskName; // Changed field name from 'taskName' to 'subtaskName'
     private String subtaskDescription; // Changed field name from 'taskDescription' to 'subtaskDescription'
     private boolean isCompleted;
-    private String assignedUser;
 
     @ManyToOne
+    @JsonBackReference
     private Task parentTask; // Assuming a subtask belongs to a parent task
 
     @NotNull

@@ -1,14 +1,13 @@
 package com.estu.taskmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -28,6 +27,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Task> tasks;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
