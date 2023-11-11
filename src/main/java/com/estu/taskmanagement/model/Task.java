@@ -34,7 +34,7 @@ public class Task {
     @NotNull
     private LocalDate dueDate;
 
-    @OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonManagedReference
     private List<Subtask> subtasks;
 

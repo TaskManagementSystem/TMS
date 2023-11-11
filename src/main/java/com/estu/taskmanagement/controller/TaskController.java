@@ -61,7 +61,7 @@ import java.util.List;
             if(taskservice.existById(taskId)) {
                 taskservice.deleteTask(taskId);
                 HashMap<String, String>message= new HashMap<>();
-                message.put("message", "Task " + taskId + "removed!");
+                message.put("message", "Task " + taskId + " removed!");
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             }else {
                 HashMap<String, String>message= new HashMap<>();
