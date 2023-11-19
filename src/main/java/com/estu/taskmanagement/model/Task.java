@@ -41,7 +41,7 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id") // Specify the name of the foreign key column
     @JsonBackReference
-    private User assignedUser;
+    private UserEntity assignedUserEntity;
 
     // Constructors, getters, setters, etc.
 }
