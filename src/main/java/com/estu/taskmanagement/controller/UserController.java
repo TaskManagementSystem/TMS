@@ -1,6 +1,6 @@
 package com.estu.taskmanagement.controller;
 import com.estu.taskmanagement.model.Task;
-import com.estu.taskmanagement.model.User;
+import com.estu.taskmanagement.model.UserEntity;
 import com.estu.taskmanagement.repository.TaskRepository;
 import com.estu.taskmanagement.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -46,32 +46,32 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public List<User> getUser(){return userService.getUsers();    }
+    public List<UserEntity> getUser(){return userService.getUsers();    }
 
     @GetMapping("/user/{userId}")
-    public User getById(@PathVariable Long userId) {
+    public UserEntity getById(@PathVariable Long userId) {
         return userService.getUserById(userId).orElseThrow(()->new EntityNotFoundException("Requested User not found"));
     }
 
     @PostMapping("/user")
-    public User addUser(@RequestBody User user) {
-        return userService.save(user);
+    public UserEntity addUser(@RequestBody UserEntity userEntity) {
+        return userService.save(userEntity);
     }
 
 
     @PutMapping("/user/{userId}")
-    public ResponseEntity<?> addUser(@RequestBody User userPara, @PathVariable Long userId) {
+    public ResponseEntity<?> addUser(@RequestBody UserEntity userEntityPara, @PathVariable Long userId) {
         if(userService.existById(userId)) {
-            User user=userService.getUserById(userId).orElseThrow(()->new EntityNotFoundException("Requested User not found"));
-            user.setUsername(userPara.getUsername());
-            user.setPassword(userPara.getPassword());
-            user.setFirstName(userPara.getFirstName());
-            user.setLastName(userPara.getLastName());
-            user.setEmail(userPara.getEmail());
-            user.setRoles(userPara.getRoles());
+            UserEntity userEntity =userService.getUserById(userId).orElseThrow(()->new EntityNotFoundException("Requested User not found"));
+            userEntity.setUsername(userEntityPara.getUsername());
+            userEntity.setPassword(userEntityPara.getPassword());
+            userEntity.setFirstName(userEntityPara.getFirstName());
+            userEntity.setLastName(userEntityPara.getLastName());
+            userEntity.setEmail(userEntityPara.getEmail());
+            userEntity.setRoles(userEntityPara.getRoles());
 
-            userService.save(user);
-            return ResponseEntity.ok().body(user);
+            userService.save(userEntity);
+            return ResponseEntity.ok().body(userEntity);
         }else {
             HashMap<String, String> message= new HashMap<>();
             message.put("message", userId + " User not found or matched!");
