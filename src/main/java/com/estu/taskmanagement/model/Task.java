@@ -39,7 +39,7 @@ public class Task {
     private List<Subtask> subtasks;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // Specify the name of the foreign key column
+    @JoinColumn(name = "assigned_user_id") // Specify the name of the foreign key column
     @JsonBackReference
     private UserEntity assignedUserEntity;
 

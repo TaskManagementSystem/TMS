@@ -28,7 +28,7 @@ public class UserController {
     @GetMapping("/user/{userId}/task")
     public ResponseEntity<List<Task>> getUserTasks(@PathVariable int userId) {
         try {
-            List<Task> userTasks = taskRepository.findByAssignedUserUserId(userId);
+            List<Task> userTasks = taskRepository.findByAssignedUserEntityUserId(userId);
             return new ResponseEntity<>(userTasks, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -38,7 +38,7 @@ public class UserController {
     @GetMapping("/user/{userId}/task/{taskId}")
     public ResponseEntity<List<Task>> getUserTasksById(@PathVariable int userId, @PathVariable int taskId) {
         try {
-            List<Task> userTasks = taskRepository.findByAssignedUserUserIdAndTaskId(userId, taskId);
+            List<Task> userTasks = taskRepository.findByAssignedUserEntityUserIdAndTaskId(userId, taskId);
             return new ResponseEntity<>(userTasks, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
