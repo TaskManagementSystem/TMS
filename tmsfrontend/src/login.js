@@ -56,7 +56,9 @@ const Login = ({ onLogin }) => {
     setActive(false);
   };
 
-  const onLoginSubmit = async () => {
+  const onLoginSubmit = async (e) => {
+    e.preventDefault();
+
     setSubmitted(true);
     validateEmail();
     validatePassword();
@@ -80,7 +82,9 @@ const Login = ({ onLogin }) => {
     }
   };
 
-  const onRegisterSubmit = async () => {
+  const onRegisterSubmit = async (e) => {
+    e.preventDefault();
+
     setSubmittedR(true);
     validateEmail();
     validatePassword();
