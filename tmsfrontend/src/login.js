@@ -3,7 +3,6 @@ import "./login.css";
 import axios from "axios";
 
 const Login = ({ onLogin }) => {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [active, setActive] = useState(false);
@@ -67,10 +66,16 @@ const Login = ({ onLogin }) => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8080/login", {
-        username: email,
-        password: password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/login",
+        {
+          username: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       const token = response.data.token;
 
@@ -93,10 +98,16 @@ const Login = ({ onLogin }) => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8080/register", {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/register",
+        {
+          email: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       console.log("Registration successful:", response.data);
 
