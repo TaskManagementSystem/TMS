@@ -10,9 +10,106 @@ const Login = ({ onLogin }) => {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [submittedR, setSubmittedR] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [emailForgot, setEmailForgot] = useState("");
+  const [emailErrorForgot, setEmailErrorForgot] = useState("");
+  const [submittedForgot, setSubmittedForgot] = useState(false);
+  const [activeForm, setActiveForm] = useState("sign-in");
 
+  /* Login Handler */
+  const onLoginSubmit = async (e) => {
+    e.preventDefault();
+
+    setSubmitted(true);
+    validateEmail();
+    validatePassword();
+
+    if (emailError || passwordError) {
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/login",
+        {
+          username: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      const token = response.data.token;
+
+      if (onLogin) {
+        onLogin(token);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  /* SignUp Handler */
+  const onRegisterSubmit = async (e) => {
+    e.preventDefault();
+
+    setSubmitted(true);
+    validateEmail();
+    validatePassword();
+
+    if (emailError || passwordError) {
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/register",
+        {
+          email: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log("Registration successful:", response.data);
+
+      setActive(false);
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
+  };
+
+  /* Email Validation */
+  const validateEmailForgot = () => {
+    if (emailForgot.trim() === "") {
+      setEmailErrorForgot("Email is required");
+    } else {
+      setEmailErrorForgot("");
+    }
+  };
+
+  const onForgotSubmit = (e) => {
+    e.preventDefault();
+    setSubmittedForgot(true);
+    validateEmailForgot();
+
+    if (emailErrorForgot === "") {
+      // Check if the email is valid
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailForgot.trim())) {
+        setEmailErrorForgot("Invalid email format");
+        return;
+      }
+
+      // Send email to the user's registered email address
+      console.log("Email sent to user's registered email address!");
+      setActive(false); // Switch back to the "Sign In" form after submitting forgot password
+      setActiveForm("sign-in");
+    }
+  };
+
+  /* Validations Handler */
   const validateEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -47,80 +144,30 @@ const Login = ({ onLogin }) => {
     }
   };
 
+  /* Toggle Handler */
+  const handleForgotPasswordClick = () => {
+    setActive(true);
+    setActiveForm("forgot-password");
+  };
+
   const handleRegisterClick = () => {
     setActive(true);
+    setActiveForm("sign-up");
   };
 
   const handleLoginClick = () => {
     setActive(false);
-  };
-
-  const onLoginSubmit = async (e) => {
-    e.preventDefault();
-
-    setSubmitted(true);
-    validateEmail();
-    validatePassword();
-
-    if (emailError || passwordError) {
-      return;
-    }
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/login",
-        {
-          username: email,
-          password: password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      const token = response.data.token;
-
-      if (onLogin) {
-        onLogin(token);
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
-  };
-
-  const onRegisterSubmit = async (e) => {
-    e.preventDefault();
-
-    setSubmittedR(true);
-    validateEmail();
-    validatePassword();
-
-    if (emailError || passwordError) {
-      return;
-    }
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/register",
-        {
-          email: email,
-          password: password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      console.log("Registration successful:", response.data);
-
-      setActive(false);
-    } catch (error) {
-      console.error("Registration failed:", error);
-    }
+    setActiveForm("sign-in");
   };
 
   return (
     <div>
       <div className={`container ${active ? "active" : ""}`} id="container">
-        <div className="form-container sign-up">
+        <div
+          className={`form-container sign-up ${
+            activeForm === "sign-up" ? "active" : ""
+          }`}
+        >
           <form>
             <h1>Create Account</h1>
             <div className="social-icons">
@@ -141,21 +188,25 @@ const Login = ({ onLogin }) => {
             <input
               type="email"
               placeholder="E-mail"
-              onBlur={() => submittedR && validateEmail()}
+              onBlur={() => submitted && validateEmail()}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <p className="error-message">{emailError}</p>
+            <p style={{ color: "red" }} className="error-message">
+              {emailError}
+            </p>
             <input
               type="password"
               placeholder="Password"
-              onBlur={() => submittedR && validatePassword()}
+              onBlur={() => submitted && validatePassword()}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <p className="error-message">{passwordError}</p>
+            <p style={{ color: "red" }} className="error-message">
+              {passwordError}
+            </p>
             <input
               type="password"
               placeholder="Confirm Password"
-              onBlur={() => submittedR && validateConfirmPassword()}
+              onBlur={() => submitted && validateConfirmPassword()}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <p className="error-message">{confirmPasswordError}</p>
@@ -164,7 +215,11 @@ const Login = ({ onLogin }) => {
             </button>
           </form>
         </div>
-        <div className="form-container sign-in">
+        <div
+          className={`form-container sign-in ${
+            activeForm === "sign-in" ? "active" : ""
+          }`}
+        >
           <form>
             <h1>Sign In</h1>
             <div className="social-icons">
@@ -187,18 +242,54 @@ const Login = ({ onLogin }) => {
               placeholder="E-mail"
               onBlur={() => submitted && validateEmail()}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
-            <p className="error-message">{emailError}</p>
+            <p style={{ color: "red" }} className="error-message">
+              {emailError}
+            </p>
             <input
               type="password"
               placeholder="Password"
               onBlur={() => submitted && validatePassword()}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
-            <p className="error-message">{passwordError}</p>
-            <a href="/">Forgot your password?</a>
+            <p style={{ color: "red" }} className="error-message">
+              {passwordError}
+            </p>
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                handleForgotPasswordClick();
+              }}
+            >
+              Forgot your password?
+            </a>
             <button onClick={onLoginSubmit} type="submit">
               Sign In
+            </button>
+          </form>
+        </div>
+        <div
+          className={`form-container forgot-password ${
+            active && activeForm === "forgot-password" ? "toggle-left" : ""
+          }`}
+        >
+          <form onSubmit={onForgotSubmit}>
+            <h1>Forgot Password</h1>
+            <input
+              type="email"
+              placeholder="E-mail"
+              onBlur={() => submittedForgot && validateEmailForgot()}
+              onChange={(e) => setEmailForgot(e.target.value)}
+              required
+            />
+            <p style={{ color: "red" }} className="error-message">
+              {emailErrorForgot}
+            </p>
+            <button onClick={handleLoginClick} type="button">
+              Reset Password
             </button>
           </form>
         </div>

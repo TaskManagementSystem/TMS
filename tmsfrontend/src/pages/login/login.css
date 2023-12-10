@@ -19,15 +19,14 @@ body {
 }
 
 .container {
-  width: 400px;
   background-color: #fff;
   border-radius: 30px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
   position: relative;
   overflow: hidden;
-  width: 768px;
+  width: 896px;
   max-width: 100%;
-  min-height: 480px;
+  min-height: 560px;
 }
 
 .container p {
@@ -114,6 +113,20 @@ body {
 
 .container.active .sign-up {
   transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation-delay: 0.6s;
+}
+
+.forgot-password {
+  right: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.container.active .forgot-password {
+  transform: translateX(-100%);
   opacity: 1;
   z-index: 5;
   animation-delay: 0.6s;
